@@ -1,0 +1,2 @@
+John Khan,johnkhan,john@mail.com,John123,admin
+Alex Boss,alexboss,alex@mail.com,Alex123,manager
