@@ -1,2 +1,4 @@
-John Khan,johnkhan,john@mail.com,John123,admin
-Alex Boss,alexboss,alex@mail.com,Alex123,manager
+John Khan,johnkarim,john@mail.com,John123,admin
+Alex Bob,alexbob,alex@mail.com,Alex123,manager
+Lolita Banu,lolitabanu,lolita@mail.com,Lolita123,chef
+Mona Mia,monamia,mon@mail.com,monamia123,manager
