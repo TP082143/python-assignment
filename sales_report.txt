@@ -1,4 +1,4 @@
-January,C006,John Doe,Bengali,Ilish Shorshe,20.50
-February,C007,Jane Smith,Fast Food,Burger,15.75
-March,C009,Bob Johnson,Italian,Pasta,12.00
-January,C010,Mary Davis,American,Salad,10.50
+January,C006,John Doe,Bengali,Ilish Shorshe,20.50,1
+February,C007,Jane Smith,Fast Food,Burger,15.75,2
+March,C009,Bob Johnson,Italian,Pasta,12.00,3
+January,C010,Mary Davis,American,Salad,10.50,1
