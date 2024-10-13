@@ -57,7 +57,7 @@ def validate_login(user_name, pass_word):
 # --- admin menu starts ---
 def admin_menu(name):
     while True:
-        print("\n~~~~~~Admin Menu~~~~~~")
+        print("\n~~~~~~ Admin Menu ~~~~~~")
         print("1. Manage Staff")
         print("2. View Sales Report")
         print("3. View Feedback")
@@ -79,7 +79,7 @@ def admin_menu(name):
                 print("Thank you. Have a good day!")
                 break
             case _:
-                print("Invalid Input. Please try again!")
+                print("Invalid input. Please try again!")
 # --- admin menu ends ---
 
 # --- admin manage staff function starts ---
@@ -121,7 +121,7 @@ def add_staff():
                 case 3:
                     break
                 case _:
-                    print("Wrong input! Try again")
+                    print("Wrong input! Try again.")
         except ValueError:
             print("Wrong input! Try again")
 
@@ -136,7 +136,7 @@ def add_staff_manager():
         elif i == 1:
             info.append(input("Enter username: "))
         elif i == 2:
-            info.append(input("Enter mail address: "))
+            info.append(input("Enter email address: "))
         elif i == 3:
             info.append(info[1] + "123")
         elif i == 4:
@@ -434,16 +434,17 @@ def full_report():
 def view_feedback():
     customer_feedback = []
     i = 1
-    print("----------------------------------------------------------------------------------------------------------")
-    print("                                             ~~~~ Feedbacks ~~~~                                          ")
-    print("----------------------------------------------------------------------------------------------------------")
+    print("------------------------------------------------------------------------------------------------------------------------------")
+    print("                                                        ~~~~ Feedbacks ~~~~                                                   ")
+    print("------------------------------------------------------------------------------------------------------------------------------")
     with open("customer_feedback.txt", "r") as file:
         for  line in file:
             customer_feedback = line.strip().split(",")
-            print(f"{i}. CUSTOMER_ID - {customer_feedback[0]} | CUSTOMER_NAME - {customer_feedback[1]} | COMMENT - {customer_feedback[2]} | RATING - {customer_feedback[3]}")
+            print(f"{i}. CUSTOMER_ID - {customer_feedback[0]} | CUSTOMER_NAME - {customer_feedback[1]} | FOOD - {customer_feedback[2]} | COMMENT - {customer_feedback[3]} | RATING - {customer_feedback[4]}")
             i += 1
-    print("----------------------------------------------------------------------------------------------------------")
+    print("------------------------------------------------------------------------------------------------------------------------------")
 # --- View Feedback Section Ends ---
+
 
 # --- Update Profile Section Starts ---
 def update_profile(name):
