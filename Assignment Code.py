@@ -19,6 +19,7 @@ def login():
             if value[1] == "admin":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Administration Portal.")
+                #Minhaj Part Begins
                 admin_menu(value[0])
                 break
             elif value[1] == "manager":
@@ -28,6 +29,23 @@ def login():
             elif value[1] == "chef":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Chef Portal.")
+                #Omar Part Begins
+                while True:
+                    print("\n1. Register")
+                    print("2. Chef Management Menu")
+                    print("3. Logout")
+
+                    choice = input("Select your choice (1-3): ")
+
+                    if choice == '1':
+                        registration()
+                    elif choice == '2':
+                        chef_management_menu(value[0], user_name)  # Proceed to main management system if login is successful
+                    elif choice == '3':
+                        print("Exiting program...")
+                        break
+                    else:
+                        print("Invalid choice! Please pick between (1-3).")
                 break
             elif value[1] == "customer":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -495,6 +513,229 @@ def modification_for_update(pre_name, modify_num):
     print("Successfully updated!\n")
     return 1
 # --- Update Profile Section Ends ---
+
+
+
+
+
+#///////////////////-------------------------------- OMAR --------------------------------//////////////////////
+# Functions for handling orders
+def create_order(order_id, customer_name, dish):
+    return {
+        'order_id': order_id,
+        'customer_name': customer_name,
+        'dish': dish,
+        'status': 'Pending'
+    }
+
+
+def update_order_status(orders, order_id, new_status):
+    for order in orders:
+        if order['order_id'] == order_id:
+            if new_status.lower() in ["in progress", "completed"]:
+                order['status'] = new_status
+                print(f"Order {order_id} status updated to: {order['status']}")
+            else:
+                print("Invalid status. Please use 'In Progress' or 'Completed'.")
+            break
+    else:
+        print(f"Order {order_id} not found.")
+
+
+def view_orders(orders):
+    if not orders:
+        print("No orders placed yet.")
+    else:
+        print("Customer Orders:")
+        for order in orders:
+            print(
+                f"- Order ID: {order['order_id']}, Customer: {order['customer_name']}, Dish: {order['dish']}, Status: {order['status']}")
+
+
+# Functions for handling ingredients
+def load_ingredients(filename):
+    ingredients = []
+    try:
+        with open(filename, "r") as file:
+            for line in file:
+                ingredient_id, name, quantity = line.strip().split(",")
+                ingredients.append({
+                    'ingredient_id': int(ingredient_id),
+                    'name': name,
+                    'quantity': quantity  # Store as string
+                })
+    except FileNotFoundError:
+        print(f"{filename} not found. Starting with an empty inventory.")
+    return ingredients
+
+
+def save_ingredients(filename, ingredients):
+    with open(filename, "w") as file:
+        for ingredient in ingredients:
+            file.write(f"{ingredient['ingredient_id']},{ingredient['name']},{ingredient['quantity']}\n")
+
+
+def add_ingredient(ingredients):
+    ingredient_id = int(input("Enter ingredient ID: "))
+
+    # Check for duplicate ingredient ID
+    for ingredient in ingredients:
+        if ingredient['ingredient_id'] == ingredient_id:
+            print("Ingredient ID already exists. Please choose a different ID.")
+            return  # Exit the function if ID is duplicate
+
+    name = input("Enter ingredient name: ")
+    quantity = input("Enter ingredient quantity (can be string or int): ")  # Accept both types
+    ingredients.append({
+        'ingredient_id': ingredient_id,
+        'name': name,
+        'quantity': quantity  # Store quantity as string
+    })
+    save_ingredients("ingredients.txt", ingredients)
+    print("Ingredient added successfully!")
+
+
+def edit_ingredient(ingredients):
+    ingredient_id = int(input("Enter ingredient ID to edit: "))
+    for ingredient in ingredients:
+        if ingredient['ingredient_id'] == ingredient_id:
+            ingredient['name'] = input("Enter new ingredient name: ")
+            quantity = input("Enter new ingredient quantity: ")
+            ingredient['quantity'] = quantity  # Store quantity as string
+            save_ingredients("ingredients.txt", ingredients)
+            print("Ingredient updated successfully!")
+            break
+    else:
+        print("Ingredient not found!")
+
+
+def delete_ingredient(ingredients):
+    ingredient_id = int(input("Enter ingredient ID to delete: "))
+    for ingredient in ingredients:
+        if ingredient['ingredient_id'] == ingredient_id:
+            ingredients.remove(ingredient)
+            save_ingredients("ingredients.txt", ingredients)
+            print("Ingredient deleted successfully!")
+            break
+    else:
+        print("Ingredient not found!")
+
+
+def view_ingredients(ingredients):
+    if not ingredients:
+        print("Ingredient inventory is empty.")
+    else:
+        print("Current Ingredients:")
+        for ingredient in ingredients:
+            print(
+                f"- ID: {ingredient['ingredient_id']}, Name: {ingredient['name']}, Quantity: {ingredient['quantity']}")
+
+
+# User registration
+def registration():
+    chef_name = input("Enter your name: ")
+    chef_username = input("Enter username: ")
+    chef_password = input("Enter password: ")
+    chef_email = input("Enter your Email: ")
+
+    # Check for duplicate user ID
+    with open("user.txt", "r") as file:
+        for line in file:
+            lst = line.strip().split(",")
+            if lst[1] == chef_username:
+                print("Username already exists. Please choose a different username.")
+                return  # Exit the function if ID is duplicate
+
+    with open("user.txt", "a") as file:
+        file.write(f"{chef_name},{chef_username},{chef_email},{chef_password},chef\n")
+    print("User registered successfully!\n")
+
+
+# Function to update user profile
+def update_profile_chef(username):
+    users = []
+    found = False
+    with open("user.txt", "r") as file:
+        for line in file:
+            lst = line.strip().split(",")
+            if lst[1] == username:
+                found = True
+                print("Current profile details:")
+                print(f"Username: {lst[1]}, Email: {lst[2]}")
+                new_username = input("Enter new username (leave blank to keep current): ")
+                new_email = input("Enter new email (leave blank to keep current): ")
+                new_password = input("Enter new password (leave blank to keep current): ")
+
+                # Update fields if new input is provided
+                if new_username:
+                    lst[1] = new_username
+                if new_email:
+                    lst[2] = new_email
+                if new_password:
+                    lst[3] = new_password
+
+            users.append(",".join(lst))
+
+    if found:
+        with open("user.txt", "w") as file:
+            for user in users:
+                file.write(user + "\n")
+        print("Profile updated successfully!")
+    else:
+        print("User not found!")
+
+
+# Main management system for logged-in users
+def chef_management_menu(name, username):
+    ingredients = load_ingredients("ingredients.txt")
+    orders = []
+
+    while True:
+        print("\nManagement Menu:")
+        print("1. Add Ingredient")
+        print("2. Edit Ingredient")
+        print("3. Delete Ingredient")
+        print("4. View Ingredients")
+        print("5. Add Order")
+        print("6. Update Order Status")
+        print("7. View Orders")
+        print("8. Update Profile")  # Add option to update profile
+        print("9. Logout")
+        print("10. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            add_ingredient(ingredients)
+        elif choice == "2":
+            edit_ingredient(ingredients)
+        elif choice == "3":
+            delete_ingredient(ingredients)
+        elif choice == "4":
+            view_ingredients(ingredients)
+        elif choice == "5":
+            order_id = int(input("Enter order ID: "))
+            customer_name = input("Enter customer name: ")
+            dish = input("Enter dish: ")
+            orders.append(create_order(order_id, customer_name, dish))
+        elif choice == "6":
+            order_id = int(input("Enter order ID: "))
+            new_status = input("Enter new status (In Progress/Completed): ")
+            update_order_status(orders, order_id, new_status)
+        elif choice == "7":
+            view_orders(orders)
+        elif choice == "8":
+            update_profile_chef(username)  # Pass user ID for profile update
+        elif choice == "9":
+            print(f"Goodbye, {name}!")
+            return  # Logs out the user and returns to the login screen
+        elif choice == "10":
+            print("Exiting program...")
+            exit()
+        else:
+            print("Invalid choice. Please try again.")
+
+#--------------------------------------------------------------------------------------------////////
 
 
 main()
