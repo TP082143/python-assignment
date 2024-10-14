@@ -19,7 +19,6 @@ def login():
             if value[1] == "admin":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Administration Portal.")
-                #Minhaj Part Begins
                 admin_menu(value[0])
                 break
             elif value[1] == "manager":
@@ -29,7 +28,7 @@ def login():
             elif value[1] == "chef":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Chef Portal.")
-                #Omar Part Begins
+                # User registration and login system
                 while True:
                     print("\n1. Register")
                     print("2. Chef Management Menu")
