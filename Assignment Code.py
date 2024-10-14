@@ -584,7 +584,7 @@ def add_ingredient(ingredients):
             return  # Exit the function if ID is duplicate
 
     name = input("Enter ingredient name: ")
-    quantity = input("Enter ingredient quantity (can be string or int): ")  # Accept both types
+    quantity = input("Enter ingredient quantity: ")
     ingredients.append({
         'ingredient_id': ingredient_id,
         'name': name,
