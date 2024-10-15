@@ -24,6 +24,7 @@ def login():
             elif value[1] == "manager":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Manager Portal.")
+                manager_menu(value[0])
                 break
             elif value[1] == "chef":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -427,7 +428,7 @@ def month_report(month):
     #Full Sales Report Function
 def full_report():
     lst = []
-    month = ['','January','February','March','April','May','June','July','August','September','October','November','December']
+    total = 0
     for i in range(1, 13):
         file = open("sales_report.txt", "r")
         file.seek(0)
@@ -439,12 +440,23 @@ def full_report():
                 if month_show == 0:
                     print("------------------------------------------------------------------------------------------------------------------------")
                     print(f"                                         ~~~~ {lst[0].upper()} Sales ~~~~                                          ")
-                    month_show += 1
+                    month_show = 1
                 print(f"{num}. Customer ID - {lst[1]} || Customer name - {lst[2]} || Cuisine Type - {lst[3]} || Dish - {lst[4]} || Price - RM{lst[5]}")
+                total = total + float(lst[5])
                 num += 1
         file.close()
+
         if i == 12:
             print("------------------------------------------------------------------------------------------------------------------------")
+    while True:
+        yorn = input("\nDo you want to see the total sale? Y/N: ").strip().upper()
+        if yorn == 'Y':
+            print(f"Total sales = RM{total}")
+            break
+        elif yorn == 'N':
+            break
+        else:
+            print("Wrong Input. Please try again!")
 # --- View Sales Section Ends ---
 
 # --- View Feedback Section Starts ---
@@ -513,9 +525,300 @@ def modification_for_update(pre_name, modify_num):
     return 1
 # --- Update Profile Section Ends ---
 
+#///////////////////------------------------------- SHAMEEL -------------------------///////////////////////////
+
+def manager_menu(name):
+    while True:
+        print("\n~~~~~~ Manager Menu ~~~~~~")
+        print("1. Manage Customers")
+        print("2. Manage Menu Categories and Pricing")
+        print("3. View Ingredients List Requested by Chef")
+        print("4. Update Profile")
+        print("5. Logout")
+        selection = input("Select an option: ")
+
+        match selection:
+            case "1":
+                manage_customers()
+            case "2":
+                manage_menu()
+            case "3":
+                view_ingredients_list()
+            case "4":
+                update_manager_profile(name)
+            case "5":
+                print("Thank you. Have a good day!")
+                break
+            case _:
+                print("Invalid input. Please try again!")
+# --- manager menu ends ---
+
+# --- manage customers function starts ---
+def manage_customers():
+    while True:
+        print("\n~~~~~~ Manage Customers ~~~~~~")
+        print("1. Add Customer")
+        print("2. Edit Customer")
+        print("3. Delete Customer")
+        print("4. Back to Manager Menu")
+        selection = input("Select an option: ")
+
+        match selection:
+            case "1":
+                add_customer()
+            case "2":
+                edit_customer()
+            case "3":
+                delete_customer()
+            case "4":
+                break
+            case _:
+                print("Invalid input. Please try again!")
+
+# Add customer function
+def add_customer():
+    print("Enter the details to add customer: ")
+    name = input("Enter customer name: ")
+    username = input("Enter username: ")
+    email = input("Enter email address: ")
+    password = username + "123"
+    role = "customer"
+    with open("user.txt", "a") as file:
+        file.write(f"{name},{username},{email},{password},{role}\n")
+    print("Customer added successfully!")
+
+# Edit customer function
+def edit_customer():
+    username = input("Enter the username of the customer: ")
+    data = []
+    found = False
+
+    with open("user.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            if info[1] == username and info[4] == "customer":
+                found = True
+                print("\nWhat would you like to edit?")
+                print("1. Name")
+                print("2. Username")
+                print("3. Email")
+                print("4. Password")
+                print("5. Back")
+
+                selection = int(input("Choose the option you want to edit: "))
+
+                match selection:
+                    case 1:
+                        info[0] = input("\nEnter the new name: ")
+                    case 2:
+                        info[1] = input("\nEnter the new username: ")
+                    case 3:
+                        info[2] = input("\nEnter the new email: ")
+                    case 4:
+                        info[3] = input("\nEnter the new password: ")
+                    case 5:
+                        print("Back to menu\n")
+                        return
+                    case _:
+                        print("Invalid selection! Please choose a valid option.")
+
+            data.append(info)
+
+    with open("user.txt", "w") as file:
+        for line in data:
+            file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]}\n")
+
+    if found:
+        print("Customer edited successfully!")
+    else:
+        print("No matching customer found.")
+
+# Delete customer function
+def delete_customer():
+    username = input("Enter the username of the customer to delete: ")
+    data = []
+    found = False
+
+    with open("user.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            if info[1] == username and info[4] == "customer":
+                found = True
+            else:
+                data.append(info)
+
+    with open("user.txt", "w") as file:
+        for line in data:
+            file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]}\n")
+
+    if found:
+        print("Customer deleted successfully!")
+    else:
+        print("No matching customer found.")
+
+# --- manage customers function ends ---
+
+# --- manage menu function starts ---
+def manage_menu():
+    while True:
+        print("\n~~~~~~ Manage Menu Categories and Pricing ~~~~~~")
+        print("1. Add Menu Item")
+        print("2. Edit Menu Item")
+        print("3. Delete Menu Item")
+        print("4. Back to Manager Menu")
+        selection = input("Select an option: ")
+
+        match selection:
+            case "1":
+                add_menu_item()
+            case "2":
+                edit_menu_item()
+            case "3":
+                delete_menu_item()
+            case "4":
+                break
+            case _:
+                print("Invalid input. Please try again!")
+
+# Add menu item function
+def add_menu_item():
+    print("Enter the details to add menu item: ")
+    category = input("Enter category: ")
+    item_name = input("Enter item name: ")
+    price = float(input("Enter price: "))
+    with open("menu.txt", "a") as file:
+        file.write(f"{category},{item_name},{price}\n")
+    print("Menu item added successfully!")
+
+# Edit menu item function
+def edit_menu_item():
+    cat = input("Enter the name of the category: ")
+    item_name = input("Enter the name of the menu item to edit: ")
+    data = []
+    found = False
+
+    with open("menu.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            if info[1] == item_name and info[0] == cat:
+                found = True
+                print("\nWhat would you like to edit?")
+                print("1. Category")
+                print("2. Item Name")
+                print("3. Price")
+                print("4. Back")
+
+                selection = int(input("Choose the option you want to edit: "))
+
+                match selection:
+                    case 1:
+                        info[0] = input("\nEnter the new category: ")
+                    case 2:
+                        info[1] = input("\nEnter the new item name: ")
+                    case 3:
+                        info[2] = float(input("\nEnter the new price: "))
+                    case 4:
+                        print("Back to menu\n")
+                        return
+                    case _:
+                        print("Invalid selection! Please choose a valid option.")
+
+            data.append(info)
+
+    with open("menu.txt", "w") as file:
+        for line in data:
+            file.write(f"{line[0]},{line[1]},{line[2]}\n")
+
+    if found:
+        print("Menu item edited successfully!")
+    else:
+        print("No matching menu item found.")
+
+# Delete menu item function
+def delete_menu_item():
+    cat = input("Enter the name of the category: ")
+    item_name = input("Enter the name of the menu item to delete: ")
+    data = []
+    found = False
+
+    with open("menu.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            if info[1] == item_name and info[0] == cat:
+                found = True
+            else:
+                data.append(info)
+
+    with open("menu.txt", "w") as file:
+        for line in data:
+            file.write(f"{line[0]},{line[1]},{line[2]}\n")
+
+    if found:
+        print("Menu item deleted successfully!")
+    else:
+        print("No matching menu item found.")
+
+# --- manage menu function ends ---
+
+def view_ingredients_list():
+    lst = []
+    i = 1
+    with open("missing.txt", "r") as file:
+        print("\n~~~~~~~~  The List of Ingredients   ~~~~~~~~")
+        for line in file:
+            lst = line.strip().split(",")
+            print(f"{i}. Ingredient - {lst[0]}, Quantity - {lst[1]}")
+            i += 1
+
+def update_manager_profile(name):
+    print("\n~~~~~~ Update your profile ~~~~~~")
+    print("1. Name")
+    print("2. Username")
+    print("3. Email")
+    print("4. Password")
+    print("5. Back to Admin Menu")
+    while True:
+        try:
+            modify_num = int(input("Select option to modify name/username/email/password: "))
+            container = modification(name, modify_num)
+            if container == 1:
+                break
+            else:
+                continue
+        except ValueError:
+            print("Invalid input! Try again.")
 
 
+def modification(pre_name, modify_num):
+    data = []
+    info = []
+    with open("user.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            #name = info[0]
+            if pre_name == info[0]:
+                if modify_num == 1:
+                    info[0] = input("Enter new name: ")
+                elif modify_num == 2:
+                    info[1] = input("Enter new username: ")
+                elif modify_num == 3:
+                    info[2] = input("Enter new email: ")
+                elif modify_num == 4:
+                    info[3] = input("Enter new password: ")
+                elif modify_num == 5:
+                    print("Loading...")
+                    return 1
+                else:
+                    print("Invalid input! Try again")
+                    return 0
+            data.append(info)
+    with open("user.txt", "w") as file:
+        for line in data:
+            file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]}\n")
+    print("Successfully updated!\n")
+    return 1
 
+#///////////////////--------------------------------////////////////////////////////////
 
 #///////////////////-------------------------------- OMAR --------------------------------//////////////////////
 # Functions for handling orders
@@ -584,7 +887,7 @@ def add_ingredient(ingredients):
             return  # Exit the function if ID is duplicate
 
     name = input("Enter ingredient name: ")
-    quantity = input("Enter ingredient quantity: ")
+    quantity = input("Enter ingredient quantity (can be string or int): ")  # Accept both types
     ingredients.append({
         'ingredient_id': ingredient_id,
         'name': name,
@@ -629,21 +932,30 @@ def view_ingredients(ingredients):
             print(
                 f"- ID: {ingredient['ingredient_id']}, Name: {ingredient['name']}, Quantity: {ingredient['quantity']}")
 
+def missing_ingredients():
+    out_of_stock = int(input("number of ingredients to restock:"))
+    with open("missing.txt", "w") as file:
+        count = 1
+        for i in range(1,out_of_stock+1):
+            print(f"{i} no. ingredient")
+            name = input("Enter the name of the ingredient: ")
+            quantity = input("Enter the quantity in kg: ")
+            file.write(f"{name},{quantity}\n")
+    print("Added Successfully!")
 
 # User registration
 def registration():
+    lst = []
     chef_name = input("Enter your name: ")
     chef_username = input("Enter username: ")
     chef_password = input("Enter password: ")
     chef_email = input("Enter your Email: ")
-
-    # Check for duplicate user ID
     with open("user.txt", "r") as file:
         for line in file:
             lst = line.strip().split(",")
             if lst[1] == chef_username:
                 print("Username already exists. Please choose a different username.")
-                return  # Exit the function if ID is duplicate
+                return
 
     with open("user.txt", "a") as file:
         file.write(f"{chef_name},{chef_username},{chef_email},{chef_password},chef\n")
@@ -713,10 +1025,11 @@ def chef_management_menu(name, username):
         elif choice == "4":
             view_ingredients(ingredients)
         elif choice == "5":
-            order_id = int(input("Enter order ID: "))
-            customer_name = input("Enter customer name: ")
-            dish = input("Enter dish: ")
-            orders.append(create_order(order_id, customer_name, dish))
+            missing_ingredients()
+            #order_id = int(input("Enter order ID: "))
+            #customer_name = input("Enter customer name: ")
+            #dish = input("Enter dish: ")
+            #orders.append(create_order(order_id, customer_name, dish))
         elif choice == "6":
             order_id = int(input("Enter order ID: "))
             new_status = input("Enter new status (In Progress/Completed): ")
@@ -734,7 +1047,6 @@ def chef_management_menu(name, username):
         else:
             print("Invalid choice. Please try again.")
 
-#--------------------------------------------------------------------------------------------////////
-
+#--------------------------------------------------------------------------------------------/////////////////
 
 main()
