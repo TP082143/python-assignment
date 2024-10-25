@@ -440,8 +440,8 @@ def month_report(month):
                 report = line.strip().split(",")
                 if report[0] == month.title():
                     print(
-                        f"Customer ID - {report[1]} || Customer name - {report[2]} || Cuisine Type - {report[3]} || Dish - {report[4]} || Price - RM{report[5]}")
-                    total = total + float(report[5])
+                        f"Customer name - {report[1]} || Cuisine Type - {report[2]} || Dish - {report[3]} || Price - RM{report[4]}")
+                    total = total + float(report[4])
         print("______________________________________________________________________________________________________________________")
     else:
         print("Sorry, there is no sales report for this month.")
@@ -467,13 +467,13 @@ def full_report():
         num = 1
         for line in file:
             lst = line.strip().split(",")
-            if int(lst[6]) == i:
+            if int(lst[5]) == i:
                 if month_show == 0:
                     print("------------------------------------------------------------------------------------------------------------------------")
                     print(f"                                         ~~~~ {lst[0].upper()} Sales ~~~~                                          ")
                     month_show = 1
-                print(f"{num}. Customer ID - {lst[1]} || Customer name - {lst[2]} || Cuisine Type - {lst[3]} || Dish - {lst[4]} || Price - RM{lst[5]}")
-                total = total + float(lst[5])
+                print(f"{num} Customer name - {lst[1]} || Cuisine Type - {lst[2]} || Dish - {lst[3]} || Price - RM{lst[4]}")
+                total = total + float(lst[4])
                 num += 1
         file.close()
 
@@ -1245,5 +1245,3 @@ def update_customer_profile(name, username):
 #---------------------------------------////////////////////////////////////////////////////////
 
 main()
-
-
