@@ -1,0 +1,8 @@
+22,carrot,11
+9,eggs,24
+2,milk,80
+3,tomato,54
+4,chicken,89
+1,salmon,3kg
+5,banana,4kg
+12,duck,3kg
