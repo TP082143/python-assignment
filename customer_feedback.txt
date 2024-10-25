@@ -1,3 +1,6 @@
-C001,Maria Alam,The food was fantastic!,5.00
-C002, Alex Pop,The food was fantastic!,5.00
-C005,Poppie Corn,The food was fantastic!,5.00
+Maria Alam,Bengali,Ilish Shorshe,The food was fantastic!,5
+Alex Pop,Western,Burger,The food was fantastic!,5
+Poppie Corn,Italian,Pizza,The food was fantastic!,5
+Bibi Magura,Bengali,Murgi Vuna,The spicy taste was delicious!,5
+Bibiana,Indian,Butter Chicken,Nice Taste,5
+Bibi Shakura,Western,Hamburger,The patty was juicy!,4.5
