@@ -4,4 +4,4 @@ Mona Mia,monamia,mon@mail.com,monamia123,manager
 Mohammad Khalid,mdkhalid,khalid@mail.com,mdkhalid123,manager
 Lolita,lolita,lolita@mail.com,lolita123,chef
 Bibi Shakura,bibiana,bibi@mail.com,bibiana123,customer
-Angle Sadia,anglesadia,angle@mail.com,angle123,customer
+Angel Sadia,angelsadia,angle@mail.com,Angel123,customer
