@@ -1,3 +1,0 @@
-banana,70kg
-mango,50kg
-red chilli,10kg
