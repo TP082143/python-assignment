@@ -25,23 +25,7 @@ def login():
             elif value[1] == "chef":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                 print(f"Hello, {value[0]}. This is your Chef Portal.")
-                # User registration and login system
-                while True:
-                    print("\n1. Register")
-                    print("2. Chef Management Menu")
-                    print("3. Logout")
-
-                    choice = input("Select your choice (1-3): ")
-
-                    if choice == '1':
-                        registration()
-                    elif choice == '2':
-                        chef_management_menu(value[0], user_name)  # Proceed to main management system if login is successful
-                    elif choice == '3':
-                        print("Exiting program...")
-                        break
-                    else:
-                        print("Invalid choice! Please pick between (1-3).")
+                chef_management_menu(value[0], user_name)  # Proceed to main management system if login is successful
                 break
             elif value[1] == "customer":
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -439,9 +423,8 @@ def month_report(month):
             for line in file:
                 report = line.strip().split(",")
                 if report[0] == month.title():
-                    print(
-                        f"Customer name - {report[1]} || Cuisine Type - {report[2]} || Dish - {report[3]} || Price - RM{report[4]}")
-                    total = total + float(report[4])
+                    print(f"Customer name - {report[3]} || Order ID - {report[1]} || Cuisine Type - {report[3]} || Dish - {report[4]} || Price - RM{report[5]}")
+                    total = total + float(report[5])
         print("______________________________________________________________________________________________________________________")
     else:
         print("Sorry, there is no sales report for this month.")
@@ -467,13 +450,13 @@ def full_report():
         num = 1
         for line in file:
             lst = line.strip().split(",")
-            if int(lst[5]) == i:
+            if int(lst[6]) == i:
                 if month_show == 0:
                     print("------------------------------------------------------------------------------------------------------------------------")
                     print(f"                                         ~~~~ {lst[0].upper()} Sales ~~~~                                          ")
                     month_show = 1
-                print(f"{num} Customer name - {lst[1]} || Cuisine Type - {lst[2]} || Dish - {lst[3]} || Price - RM{lst[4]}")
-                total = total + float(lst[4])
+                print(f"{num}. Customer name - {lst[2]} || Order ID - {lst[1]} || Cuisine Type - {lst[3]} || Dish - {lst[4]} || Price - RM{lst[5]}")
+                total = total + float(lst[5])
                 num += 1
         file.close()
 
@@ -898,12 +881,12 @@ def update_order_status(orders, order_id, dish, new_status):
     update_order = []
     order_pop = False
     for order in orders:
-        if int(order[0]) == int(order_id) and order[2].lower() == dish.lower():
+        if int(order[0]) == int(order_id) and order[3].lower() == dish.lower():
             print("\nOK!!")
             order_pop = True
             if new_status.lower() in ["in progress", "completed"]:
-                order[4] = new_status
-                print(f"Order {order_id} status updated to: {order[4]}")
+                order[5] = new_status
+                print(f"Order {order_id} status updated to: {order[5]}")
             else:
                 print("Invalid status. Please use 'In Progress' or 'Completed'.")
             update_order.append(order)
@@ -915,7 +898,7 @@ def update_order_status(orders, order_id, dish, new_status):
 
     with open("orders.txt", "w") as file:
         for line in update_order:
-            file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]}\n")
+            file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]},{line[5].title()}\n")
 
 
 def view_orders(orders):
@@ -924,7 +907,7 @@ def view_orders(orders):
     else:
         print("Customer Orders:")
         for order in orders:
-            print(f"- Order ID: {order[0]}, Customer: {order[1]}, Dish: {order[2]}, Quantity: {order[3]} Status: {order[4]}")
+            print(f"- Order ID: {order[0]}, Customer: {order[1]}, Dish: {order[3]}, Quantity: {order[4]} Status: {order[5]}")
 
 
 def load_ingredients(filename):
@@ -993,23 +976,6 @@ def view_ingredients(ingredients):
             print(f"- ID: {ingredient[0]}, Name: {ingredient[1]}, Quantity: {ingredient[2]}")
 
 
-def registration():
-    chef_name = input("Enter your name: ")
-    chef_username = input("Enter username: ")
-    chef_password = input("Enter password: ")
-    chef_email = input("Enter your Email: ")
-    with open("user.txt", "r") as file:
-        for line in file:
-            lst = line.strip().split(",")
-            if lst[1] == chef_username:
-                print("Username already exists. Please choose a different username.")
-                return
-
-    with open("user.txt", "a") as file:
-        file.write(f"{chef_name},{chef_username},{chef_email},{chef_password},chef\n")
-    print("User registered successfully!\n")
-
-
 def update_profile_chef(username):
     users = []
     found = False
@@ -1050,15 +1016,14 @@ def chef_management_menu(name, username):
             orders.append(info)
     while True:
         print("\nManagement Menu:")
-        print("1. Add Ingredient")
-        print("2. Edit Ingredient")
-        print("3. Delete Ingredient")
+        print("1. Order Stock Out Ingredient")
+        print("2. Edit Sock Out Ingredients")
+        print("3. Delete Ingredients")
         print("4. View Ingredients")
         print("5. Update Order Status")
         print("6. View Orders")
         print("7. Update Profile")
         print("8. Logout")
-        print("9. Exit")
 
         choice = input("Enter your choice: ")
         if choice == "1":
@@ -1081,13 +1046,8 @@ def chef_management_menu(name, username):
         elif choice == "8":
             print(f"Goodbye, {name}!")
             return
-        elif choice == "9":
-            print("Exiting program...")
-            exit()
         else:
             print("Invalid choice. Please try again.")
-
-
 
 #--------------------------------------------------------------------------------------------/////////////////
 
@@ -1180,21 +1140,27 @@ def place_order(order_id, name, username, cate, item_name, quantity, price):
             month = line.strip().split(",")
     # Sales report
     with open("sales_report.txt", "a") as file:
-        file.write(f"{month[0]},{name},{cate},{item_name},{final_price},{month[1]}\n")
+        file.write(f"{month[0]},{order_id},{name},{cate},{item_name},{final_price},{month[1]}\n")
 
 
 # View Order Status Function
 def view_order_status(username):
     found = False
     with open("orders.txt", "r") as file:
-        print("\n~~~~~~ Your Orders ~~~~~~")
+        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~    Completed Orders    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         for line in file:
             info = line.strip().split(",")
-            if info[1] == username:
-                print(f"Order ID: {info[0]}, Item: {info[2]}, Quantity: {info[3]}, Status: {info[4]}")
+            if info[1] == username and info[5] == "Completed":
+                print(f"Order ID: {info[0]}, Category: {info[2]}, Dish: {info[3]}, Quantity: {info[4]}")
+    with open("orders.txt", "r") as file:
+        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~    Your Orders    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        for line in file:
+            info = line.strip().split(",")
+            if info[1] == username and (info[5] == "In Progress" or info[5] == "Pending"):
+                print(f"Order ID: {info[0]}, Category: {info[2]}, Dish: {info[3]}, Quantity: {info[4]}, Status: {info[5]}")
                 found = True
     if not found:
-        print("No orders found.")
+        print("No pending or in progress orders found.")
 
 def edit_delete(username):
     while True:
@@ -1218,6 +1184,9 @@ def edit_delete(username):
 def edit_order(order_id, username):
     info = []
     info_sub = []
+    info_sale = []
+    store_sale = []
+    final_price = 0
     store = []
     container = False
     conti = False
@@ -1228,16 +1197,28 @@ def edit_order(order_id, username):
                 container = True
                 info[2] = input("Enter category of food: ")
                 info[3] = input("Enter dish name: ")
+                info[4] = input("Enter quantity: ")
                 with open ("menu.txt", "r") as file_sub:
                     for lines in file_sub:
                         info_sub = lines.strip().split(",")
                         if info[2].upper() == info_sub[0] and info[3].upper() == info_sub[1]:
                             conti = True
-                            print(f"The price is RM{info_sub[2]}. Please pay it in cash counter.")
+                            final_price = float(info_sub[2]) * float(info[4])
+                            print(f"The price is RM{final_price}. Please pay it in cash counter.")
+                            file_sale = open("sales_report.txt", "r")
+                            for line_sale in file_sale:
+                                info_sale = line_sale.strip().split(",")
+                                if order_id == info_sale[1]:
+                                    info_sale[3] = info[2]
+                                    info_sale[4] = info[3]
+                                    info_sale[5] = str(final_price)
+                                store_sale.append(info_sale)
+                            file_sale.close()
                     if not conti:
                         print("No such menu found!")
                         return
             store.append(info)
+
     if not container:
         print("No such order ID found")
         return
@@ -1245,19 +1226,32 @@ def edit_order(order_id, username):
         for line in store:
             file.write(f"{line[0]},{line[1]},{line[2].title()},{line[3].title()},{line[4]},{line[5]}\n")
     print("Order updated successfully!")
+    with open ("sales_report.txt", "w") as file:
+        for line in store_sale:
+            file.write(f"{line[0]},{line[1]},{line[2].title()},{line[3].title()},{line[4].title()},{line[5]},{line[6]}\n")
 
 def delete_order(order_id, username):
     info = []
     store = []
+    store_sale = []
     with open("orders.txt", "r") as file:
         for line in file:
             info = line.strip().split(",")
             if not (order_id == info[0] and username == info[1]):
                 store.append(info)
+    with open("sales_report.txt", "r") as file:
+        for line in file:
+            info = line.strip().split(",")
+            if not (order_id == info[1]):
+                store_sale.append(info)
+    with open ("sales_report.txt", "w") as file:
+        for line in store_sale:
+            file.write(f"{line[0]},{line[1]},{line[2].title()},{line[3].title()},{line[4].title()},{line[5]},{line[6]}\n")
     with open ("orders.txt", "w") as file:
         for line in store:
             file.write(f"{line[0]},{line[1]},{line[2]},{line[3]},{line[4]},{line[5]}\n")
     print("Order deleted successfully!")
+
 
 # Send Feedback Function
 def send_feedback(name):
@@ -1311,7 +1305,6 @@ def update_customer_profile(name, username):
         print("Profile updated successfully!")
     else:
         print("No matching user found.")
-
 
 #---------------------------------------////////////////////////////////////////////////////////
 
