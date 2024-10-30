@@ -1,8 +1,8 @@
 22,Carrot,11kg
 9,Eggs,24kg
 2,Milk,80kg
-3,Tomato,54kg
 4,Chicken,89kg
 1,Salmon,3kg
 5,Banana,4kg
-12,Duck,3kg
+12,Duck,12kg
+55,Watermelon,5kg
